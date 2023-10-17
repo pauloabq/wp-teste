@@ -1,0 +1,27 @@
+# Introdução
+- Obter um backup dos arquivos e um dump da base de dados (um dump .sql e um diretório com toda a estrutura de instalação do WP)
+  - os backups do elementor já trazem a estrutura pronta de dump da base de dados e dos arquivos do wordpress
+- Colocar o dump no diretório `/database`
+- Colocar os arquivos do wordpress no diretório `/files`
+- Iniciar o container. A primeira instalação deve criar o banco e popular com os dados do dump
+- Entrar no arquivo wp_config e alterar dados de conexão, links e prefixo do database (para corresponder com o arquivo de dump)
+- Atenção - Import do dump traz os usuários da aplicação 
+- Instalar o plugin do elementor de https://proelements.org/
+  - Necessário antes adicionar arquivo `.htaccess` no mesmo diretório do arquivo `wp-config.php` com o conteúdo:
+    ```
+    php_value upload_max_filesize 512M
+    php_value post_max_size 1024M
+    ```
+- Container usa 
+
+## Documentação oficial da imagem Docker
+### MySql
+[Link ](https://hub.docker.com/_/mysql)
+
+- **MYSQL_DATABASE**: This variable is optional and allows you to specify the name of a database to be created on image startup
+
+- **Initializing a fresh instance**: When a container is started for the first time, a new database with the specified name will be created and initialized with the provided configuration variables. Furthermore, it will execute files with extensions .sh, .sql and .sql.gz that are found in /docker-entrypoint-initdb.d
+
+### Wordpress
+[Link](https://hub.docker.com/_/wordpress)
+

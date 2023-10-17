@@ -1,0 +1,25 @@
+version: '3'
+services:
+  wordpress:
+    image: wordpress:latest
+    ports:
+      - "8000:80"
+    volumes:
+      - ./files:/var/www/html
+    user: "1000:1000"
+    environment:
+      WORDPRESS_DB_HOST: localhost
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: root
+      WORDPRESS_DB_NAME: wordpress
+  db:
+    image: mysql:5.7
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wordpress
+
+volumes:
+  db-data:
