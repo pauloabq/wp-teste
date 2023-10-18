@@ -1,25 +1,53 @@
 version: '3'
+
 services:
-  wordpress:
-    image: wordpress:latest
+  wp:
+    image: wordpress:latest # https://hub.docker.com/_/wordpress/
     ports:
-      - "8000:80"
+      - ${IP}:10010:80 # change ip if required (no need to change)
     volumes:
-      - ./files:/var/www/html
+      - ./wp-files:/var/www/html # Full wordpress project
+      #- ./plugin-name/trunk/:/var/www/html/wp-content/plugins/plugin-name # Plugin development
+      #- ./theme-name/trunk/:/var/www/html/wp-content/themes/theme-name # Theme development
     user: "1000:1000"
     environment:
-      WORDPRESS_DB_HOST: localhost
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: wordpress
       WORDPRESS_DB_USER: root
       WORDPRESS_DB_PASSWORD: root
-      WORDPRESS_DB_NAME: wordpress
-  db:
-    image: mysql:5.7
-    volumes:
-      - db-data:/var/lib/mysql
-      - ./database:/docker-entrypoint-initdb.d
+    depends_on:
+      - db
+    links:
+      - db
+
+  pma:
+    image: phpmyadmin/phpmyadmin
     environment:
+      # https://docs.phpmyadmin.net/en/latest/setup.html#docker-environment-variables
+      PMA_HOST: db
+      PMA_PORT: 3306
       MYSQL_ROOT_PASSWORD: root
+      UPLOAD_LIMIT: 50M
+    ports:
+      - ${IP}:8080:80
+    links:
+      - db:db
+
+  db:
+    image: mysql:latest # https://hub.docker.com/_/mysql/ - or mariadb https://hub.docker.com/_/mariadb
+    ports:
+      - ${IP}:3306:3306 # change ip if required (no need to change)
+    command: [
+        '--default_authentication_plugin=mysql_native_password',
+        '--character-set-server=utf8mb4',
+        '--collation-server=utf8mb4_unicode_ci'
+    ]
+    volumes:
+      - ./wp-database-dump:/docker-entrypoint-initdb.d
+      - db_data:/var/lib/mysql
+    environment:
       MYSQL_DATABASE: wordpress
+      MYSQL_ROOT_PASSWORD: root
 
 volumes:
-  db-data:
+  db_data:
