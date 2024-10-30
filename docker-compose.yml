@@ -8,18 +8,20 @@ services:
       - ./files:/var/www/html
     user: "1000:1000"
     environment:
-      WORDPRESS_DB_HOST: localhost
+      WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: root
       WORDPRESS_DB_PASSWORD: root
       WORDPRESS_DB_NAME: wordpress
   db:
     image: mysql:5.7
+    command: --max_allowed_packet=268435456
     volumes:
       - db-data:/var/lib/mysql
       - ./database:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: wordpress
+      # MYSQL_MAX_ALLOWED_PACKET: '200M'
 
 volumes:
   db-data:

@@ -4,7 +4,7 @@
 - Colocar o dump no diretório `/database`
 - Colocar os arquivos do wordpress no diretório `/files`
 - Iniciar o container. A primeira instalação deve criar o banco e popular com os dados do dump
-- Entrar no arquivo `wp-config.php`` e alterar dados de conexão, links e prefixo do database (para corresponder com o arquivo de dump)
+- Entrar no arquivo `wp-config.php` e alterar dados de conexão, links e prefixo do database (para corresponder com o arquivo de dump)
 - Necessário plugin do elementor
 - Instalar o plugin Pro Elements https://proelements.org/
   - Necessário antes adicionar arquivo `.htaccess` no mesmo diretório do arquivo `wp-config.php` com o conteúdo:
@@ -23,6 +23,13 @@
    where option_value like '%https://url%';
 
   ```
+- Habilitar logs - adicionar ao wp_config.php
+  ```
+  define('SCRIPT_DEBUG', true);
+  define('WP_DEBUG_LOG', true);
+  define('WP_DEBUG_DISPLAY', false);
+  ```
+
 - Alterar as URLs (ex: redirecionamentos) Elementor > Tools > Replace URL
 
 ## Documentação oficial da imagem Docker
@@ -35,4 +42,3 @@
 
 ### Wordpress
 [Link](https://hub.docker.com/_/wordpress)
-
